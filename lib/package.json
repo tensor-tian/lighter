@@ -54,6 +54,7 @@
   "homepage": "https://lighter.codehike.org",
   "funding": "https://github.com/code-hike/lighter?sponsor=1",
   "dependencies": {
-    "ansi-sequence-parser": "1.1.1"
+    "ansi-sequence-parser": "1.1.1",
+    "debug": "npm:@milahu/debug-esm@*"
   }
 }

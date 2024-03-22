@@ -1,36 +1,36 @@
 import {
-  Theme,
-  StringTheme,
-  RawTheme,
-  THEME_NAMES,
-  preloadTheme,
-  getTheme,
-  UnknownThemeError,
-  getAllThemeColors,
-} from "./theme";
-import { LanguageAlias, LanguageName, LANG_NAMES } from "./language-data";
-import {
-  highlightTokensWithScopes,
-  highlightTokens,
-  UnknownLanguageError,
-  getGrammar,
-  preloadGrammars,
-  highlightText,
-} from "./highlighter";
-import {
   Annotation,
   AnnotationExtractor,
   extractCommentsFromCode,
 } from "./comments";
+import { LANG_NAMES, LanguageAlias, LanguageName } from "./language-data";
 import {
-  applyAnnotations,
-  Lines,
-  LineGroup,
   Line,
+  LineGroup,
+  Lines,
+  Token,
   TokenGroup,
   Tokens,
-  Token,
+  applyAnnotations,
 } from "./annotations";
+import {
+  RawTheme,
+  StringTheme,
+  THEME_NAMES,
+  Theme,
+  UnknownThemeError,
+  getAllThemeColors,
+  getTheme,
+  preloadTheme,
+} from "./theme";
+import {
+  UnknownLanguageError,
+  getGrammar,
+  highlightText,
+  highlightTokens,
+  highlightTokensWithScopes,
+  preloadGrammars,
+} from "./highlighter";
 import { getTerminalStyle, highlightTerminal } from "./terminal";
 
 type Config = { scopes?: boolean };
@@ -178,6 +178,7 @@ export function highlightSync(
 export async function extractAnnotations(
   code: string,
   lang: LanguageAlias,
+  lineNums?: string,
   annotationExtractor?: AnnotationExtractor
 ) {
   if (!annotationExtractor) {
@@ -187,14 +188,19 @@ export async function extractAnnotations(
   await preloadGrammars([lang]);
   const { grammar } = getGrammar(lang);
 
-  const { newCode, annotations } = extractCommentsFromCode(
+  const { newCode, annotations, lineCount } = extractCommentsFromCode(
     code,
     grammar,
     lang,
+    lineNums,
     annotationExtractor
   );
 
-  return { code: newCode, annotations };
+  return {
+    code: newCode,
+    annotations,
+    lineNums: lineNums ? lineNums : `1:${lineCount}`,
+  };
 }
 
 export async function getThemeColors(themeOrThemeName: Theme) {

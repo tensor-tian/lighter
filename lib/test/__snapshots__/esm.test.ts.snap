@@ -564,6 +564,25 @@ exports[`extract annottations with prefix 2`] = `
 }
 `;
 
+exports[`extract multiple range annotation 1`] = `
+{
+  "annotations": [
+    {
+      "name": "from",
+      "query": "path/to/file.ts 12:14,24:30",
+      "ranges": [
+        {
+          "fromLineNumber": 2,
+          "toLineNumber": 2,
+        },
+      ],
+    },
+  ],
+  "code": "
+",
+}
+`;
+
 exports[`highlight html with theme 1`] = `
 {
   "lang": "html",

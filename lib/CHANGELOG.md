@@ -1,4 +1,4 @@
-# @code-hike/lighter
+# @code-hike-local/lighter
 
 ## 0.9.0
 

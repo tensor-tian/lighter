@@ -1,8 +1,9 @@
+import { CodeRange, parseRelativeRanges } from "./range";
+import { highlightText, highlightTokens } from "./highlighter";
+
+import { FinalTheme } from "./theme";
 import type { IGrammar } from "vscode-textmate";
 import { Token } from "./annotations";
-import { highlightText, highlightTokens } from "./highlighter";
-import { CodeRange, parseRelativeRanges } from "./range";
-import { FinalTheme } from "./theme";
 
 const PUNCTUATION = "#001";
 const COMMENT = "#010";
@@ -46,6 +47,7 @@ export function extractCommentsFromCode(
   code: string,
   grammar: IGrammar,
   lang: string,
+  lineNums: string | null,
   annotationExtractor: AnnotationExtractor
 ) {
   const lines = !grammar
@@ -54,13 +56,17 @@ export function extractCommentsFromCode(
 
   const allAnnotations: Annotation[] = [];
 
-  let lineNumber = 1;
-  const newCode = lines
+  const cursor = new LineNumsCursor(
+    typeof lineNums === "string" && lineNums.length > 0
+      ? lineNums
+      : `1:${lines.length}`
+  );
+  const newLines = lines
     .map((line) => {
       const { annotations, lineWithoutComments } = getAnnotationsFromLine(
         line,
         annotationExtractor,
-        lineNumber
+        cursor.getValue()
       );
 
       allAnnotations.push(...annotations);
@@ -79,14 +85,48 @@ export function extractCommentsFromCode(
       ) {
         return null;
       }
+      cursor.next();
 
-      lineNumber++;
       return lineText;
     })
-    .filter((line) => line !== null)
-    .join(`\n`);
+    .filter((line) => line !== null);
 
-  return { newCode, annotations: allAnnotations };
+  return {
+    newCode: newLines.join("\n"),
+    annotations: allAnnotations,
+    lineCount: newLines.length,
+  };
+}
+
+class LineNumsCursor {
+  ranges: [number, number][];
+  cursor: [number, number];
+  constructor(rangeStr: string) {
+    this.ranges = rangeStr
+      .split(",")
+      .reduce((acc, part) => {
+        const range = part.split(":");
+        const from = Number(range[0]);
+        const to = range[1] ? Number(range[1]) : from;
+        acc.push([from, to]);
+        return acc;
+      }, [])
+      .sort((a, b) => a[0] - b[0]);
+    this.cursor = [0, 0];
+  }
+  public getValue(): number {
+    const [i, j] = this.cursor;
+    return this.ranges[i][0] + j;
+  }
+  public next() {
+    const [i, j] = this.cursor;
+    if (this.getValue() === this.ranges[i][1]) {
+      this.cursor[0] = i + 1;
+      this.cursor[1] = 0;
+    } else {
+      this.cursor[1] = j + 1;
+    }
+  }
 }
 
 function getAnnotationsFromLine(
