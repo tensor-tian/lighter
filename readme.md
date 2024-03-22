@@ -3,7 +3,7 @@ The syntax highlighter used by Code Hike.
 ## Usage
 
 ```js
-import { highlight } from "@code-hike/lighter";
+import { highlight } from "@code-hike-local/lighter";
 
 const { lines, style } = await highlight(
   /* code  */ "print('hello')",

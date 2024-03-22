@@ -1,20 +1,18 @@
 {
   "private": true,
-  "workspaces": {
-    "packages": [
-      "lib",
-      "test",
-      "web"
-    ]
-  },
+  "workspaces": [
+    "lib",
+    "test",
+    "web"
+  ],
   "scripts": {
-    "dev": "yarn workspace @code-hike/lighter watch & yarn workspace lighter-web dev",
+    "dev": "yarn workspace @code-hike-local/lighter watch & yarn workspace lighter-web dev",
     "changeset": "changeset",
     "version": "changeset version",
-    "build": "yarn workspace @code-hike/lighter build",
+    "build": "yarn workspace @code-hike-local/lighter build",
     "release": "yarn build && changeset publish"
   },
-  "repository": "code-hike/lighter",
+  "repository": "tensor-tian/lighter",
   "author": "pomber",
   "dependencies": {
     "@changesets/cli": "^2.26.0"

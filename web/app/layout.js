@@ -1,4 +1,4 @@
-import "@code-hike/lighter/themes/github-from-css.css";
+import "@code-hike-local/lighter/themes/github-from-css.css";
 
 export default function RootLayout({ children }) {
   return (

@@ -1,4 +1,4 @@
-import { getThemeColors, highlight } from "@code-hike/lighter";
+import { getThemeColors, highlight } from "@code-hike-local/lighter";
 
 export async function Code({
   children,
