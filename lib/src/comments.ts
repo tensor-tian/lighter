@@ -112,6 +112,8 @@ class LineNumsCursor {
         return acc;
       }, [])
       .sort((a, b) => a[0] - b[0]);
+    // from file annotatton will append an empty line
+    this.ranges[this.ranges.length - 1][1]++;
     this.cursor = [0, 0];
   }
   public getValue(): number {

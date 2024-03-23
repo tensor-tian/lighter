@@ -1,9 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "lib",
-    "test",
-    "web"
+    "lib"
   ],
   "scripts": {
     "dev": "yarn workspace @code-hike-local/lighter watch & yarn workspace lighter-web dev",
